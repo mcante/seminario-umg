@@ -1,0 +1,84 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+
+
+    {% block content %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'inicio_view' %}"><i class="fa fa-home"></i> Inicio</a>
+                        <span>Acceso Clientes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="contact__content">
+                        <div class="contact__address">
+                            <h5>Acceso de Clientes</h5>
+
+                            <p>
+                                Si eres cliente ingresa tu código ingresar al sistema. <br>
+                                Sí aún no tienes código dirígete al formulario de Contacto.
+                            </p>
+                            
+                            <!-- Código de Cliente -->
+                            <div id="id_form_llave" style="display:show;">
+                                
+                                <div class="contact__form">
+                                <form action="#">
+                                    <input type="text" id="id_llave_cliente" placeholder="Código de Cliente">
+                                </form>
+                                <button onclick="fn_verificar_codigo();" class="site-btn">Verificar Código</button>
+                                </div>
+                                
+                            </div>
+                            <!-- ./Código de Cliente -->
+
+
+                            <div id="id_link_access" style="display:none;">
+                                <h4 id="id_nombre_cliente"></h4>
+                                <p>Presiona el siguiente botón para acceder al sistema, recuerda que puedes copiar el acceso generado para entrar de forma directa.</p>
+                                <a id="id_link_generator" class="btn btn-primary" href="#" target="_blank">Click aquí</a>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+
+{% endblock content %}
+
+{% block javascripts %} 
+{{ block.super }}
+
+<script src="{% static 'my_js/validators.js' %}"></script>
+
+<!-- alertifyjs -->
+<script src="{% static 'plugins/alertifyjs/alertify.min.js' %}"></script>
+
+<script>
+
+    const lv_url_key = "{% url 'clientes_filter_key_api' %}";
+    let lv_url_cliente = "{% url 'cliente_principal_view' 123 321 %}";
+    
+</script>
+
+
+{% endblock javascripts %}

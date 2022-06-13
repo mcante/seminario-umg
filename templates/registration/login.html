@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{% static 'dist/img/favicon.ico' %}" rel="icon" type="image/x-icon" />
+  <title>TransPort</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons 5.15.4 -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+
+  <div class="login-logo">
+    <img src="{% static 'dist/img/AdminLTELogo.png' %}" width="150" height="150" alt="">
+  </div>
+
+  <div class="login-logo">
+    <a href="#"><b>Trans</b>PORT</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Inicia sesión para comenzar</p>
+
+      {% if user.is_authenticated %}
+        <p>Es posible que esté intentando acceder a una página a la que no tiene permisos, puede continuar con la sesión activa haciendo click <a href="{% url 'principal_view' %}">aquí</a>.</p>
+        <p>También puede dar click <a href="{% url 'logout' %}">aquí</a> para cerrar la sesión activa e iniciar una nueva.</p>
+      {% endif %}
+
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <form action="" method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+          <p style="color:red">Usuario o Contraseña incorrectos, intenta de nuevo.</p>
+        {% endif %}
+
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Usuario" id="id_username" name="username" required="">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Contraseña" id="id_password" name="password" required="">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                Recordarme
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Acceder</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery v3.6.0 -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>

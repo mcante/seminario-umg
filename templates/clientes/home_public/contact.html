@@ -1,0 +1,77 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+
+
+    {% block content %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'inicio_view' %}"><i class="fa fa-home"></i> Inicio</a>
+                        <span>Contacto</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="contact__content">
+                        <div class="contact__address">
+                            <h5>Información de Contacto</h5>
+                            <ul>
+                                <li>
+                                    <h6><i class="fa fa-map-marker"></i> Dirección</h6>
+                                    <p>Colonia, Bulevar El Naranjo 8-30, Cdad. de Guatemala 01057</p>
+                                </li>
+                                <li>
+                                    <h6><i class="fa fa-phone"></i> Teléfono</h6>
+                                    <p><span>2705-5555</span><span>2705-5556</span></p>
+                                </li>
+                                <li>
+                                    <h6><i class="fa fa-headphones"></i> Soporte</h6>
+                                    <p>contactos@transport.com</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="contact__form">
+                            <h5>Mensaje a Enviar</h5>
+                            <form action="" method="post">
+                            {% csrf_token %}
+
+                                Para
+                                {{ form.negocio }} <br>
+                                {{ form.nombre_contacto }}
+                                {{ form.email }}
+                                {{ form.telefono }}
+                                {{ form.nombre_empresa }}
+                                {{ form.mensaje }}
+
+                                <button type="submit" class="site-btn">Enviar Mensaje</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="contact__map">
+                        <iframe
+                        src="https://maps.google.com/maps?q=Guatemala,%20TransPort&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                        height="780" style="border:0" allowfullscreen="">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+
+
+{% endblock content %}

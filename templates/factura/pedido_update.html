@@ -1,0 +1,295 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static %} 
+{% block title %} Pedidos {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+
+
+
+{% if object.id %}
+    Actualizar Pedido 
+{% else %}
+    Agregar Pedido
+{% endif %}
+
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+<div class="row">
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Formulario de Pedidos</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                {% if object.completado is True %}
+                    <h3>Pedido Completado</h3>
+                {% endif %}
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+
+                    <hr>
+                    <table>
+                        <tr>
+                            <td><strong>Cliente</strong>:</td>
+                            <td>{{ object.cliente.nombre_empresa|default:"" }} / {{ object.cliente.nombre_contacto|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Teléfono</strong>:</td>
+                            <td>{{ object.cliente.telefono|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Correo</strong>:</td>
+                            <td>{{ object.cliente.email|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fecha del Pedido</strong>:</td>
+                            <td>{{ object.fecha_pedido|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Detalle del Pedido</strong>:</td>
+                            <td>{{ object.descripcion_detalle_pedido|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Negocio o Empresa</strong>:</td>
+                            <td>{{ object.negocio.nombre_negocio|default:"" }} / {{ object.negocio.municipio.nombre|default:"" }}</td>
+                        </tr>
+                    </table>
+                    
+                    <hr>
+
+                    {% if object.relFacturaPedido.count == 0 %}
+                    <br>
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-default"><i class="fas fa-plus-circle"></i> Generar Orden</button>
+                    <hr>
+                    {% endif %}
+                    
+                    {% if object.completado is False %}
+                    <table class="table table-striped table-hover table-sm">
+                        <form action="" method="post">
+                            {{ form.non_field_errors }}
+                            {% csrf_token %}
+                
+                            {% for field in form.visible_fields %}
+                            <tr>
+                                <td>{{field.label}}</td>
+                                <td>{{ field|add_class:"form-control form-control-sm" }} {{ field.errors }}</td>
+                            </tr>
+                            {% endfor %}
+                            
+                            {% for field in form.hidden_fields %}
+                            <div style="display:none;">{{ field }}</div>
+                            {% endfor %}
+                
+                            <tr>
+                                <td>
+                                    <input type="submit" value="Guardar" class="btn btn-primary">
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+                    {% endif %}
+                    
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+    {% if object.relFacturaPedido.count > 0 %}
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Orden o Factura</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+
+                    <hr>
+                    <table>
+                        <tr>
+                            <td><strong>Número de Factura</strong>:</td>
+                            <td>{{ factura_orden.numero_factura|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cliente</strong>:</td>
+                            <td>{{ factura_orden.cliente.nombre_empresa|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fecha de la Factura</strong>:</td>
+                            <td>{{ factura_orden.fecha_factura|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monto Facturado</strong>:</td>
+                            <td>Q{{ factura_orden.monto_total|default:"" }}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Vendedor Asignado</strong>:</td>
+                            <td>{{ factura_orden.vendedor.get_full_name|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estado de la Factura</strong>:</td>
+                            <td>{{ factura_orden.estado_factura|default:"" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Completada</strong>:</td>
+                            <td>
+                                {% if factura_orden.completada %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Negocio o Empresa</strong>:</td>
+                            <td>{{ factura_orden.negocio.nombre_negocio|default:"" }} / {{ factura_orden.negocio.municipio.nombre|default:"" }}</td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                    {% if factura_orden.negocio.giro_negocio.id == 1 %}
+                        <a href="{% url 'planta_factura_update' factura_orden.id %}" class="btn btn-warning btn-sm"><i class="fas fa-receipt"></i> Ver Factura</a>
+                    {% elif factura_orden.negocio.giro_negocio.id == 2 %}
+                        <a href="{% url 'planta_factura_update' factura_orden.id %}" class="btn btn-warning btn-sm"><i class="fas fa-receipt"></i> Ver Factura</a>
+                    {% elif factura_orden.negocio.giro_negocio.id == 3 %}
+                        <a href="{% url 'maquinas_factura_update' factura_orden.id %}" class="btn btn-warning btn-sm"><i class="fas fa-receipt"></i> Ver Factura</a>    
+                    {% elif factura_orden.negocio.giro_negocio.id == 4 %}
+                        <a href="{% url 'transportes_factura_update' factura_orden.id %}" class="btn btn-warning btn-sm"><i class="fas fa-receipt"></i> Ver Factura</a>
+                    {% elif factura_orden.negocio.giro_negocio.id == 5 %}
+                        <a href="{% url 'proyectos_factura_update' factura_orden.id %}" class="btn btn-warning btn-sm"><i class="fas fa-receipt"></i> Ver Factura</a>    
+                    {% endif %}
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+    {% endif %}
+
+
+</div>
+<!-- /.row -->
+
+
+
+
+
+<!-- modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Generar Orden o Factura</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class = "table-responsive-sm">
+    
+                <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">
+                    <form action="{% url 'factura_add' %}" method="post" id="factura_add">
+                        {{ form.non_field_errors }} {% csrf_token %} {% for field in factura_orden_form.visible_fields %}
+                        <tr>
+                                
+                            <td>                                                    
+                                <strong>{{field.label}}</strong>
+                                {{ field|add_class:"form-control form-control-sm" }} {{ field.errors }} 
+                            </td>
+                            
+                        </tr>
+                        {% endfor %} {% for field in factura_orden_form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                        
+                        <tr>
+                            <td>
+                                <input type="submit" value="Generar" class="btn btn-primary">
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+            </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+<script>
+    init_select2();
+    init_select2_bootstrap_4();
+</script>
+
+{% endblock javascripts %}

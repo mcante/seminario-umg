@@ -1,0 +1,113 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+    {% block content %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'inicio_view' %}"><i class="fa fa-home"></i> Inicio</a>
+                        <span>Pedidos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="contact__content">
+                        <div class="contact__address">
+                            <h5>Realice sus pedidos</h5>
+
+                            <p>
+                                Si eres cliente ingresa tu código para realizar tu pedido. <br>
+                                Sí aún no tienes código dirígete al formulario de Contacto.
+                            </p>
+                            
+                            <!-- Código de Cliente -->
+                            <div id="id_form_llave" style="display:show;">
+                                
+                                <div class="contact__form">
+                                <form action="#">
+                                    <input type="text" id="id_llave_cliente" placeholder="Código de Cliente">
+                                </form>
+                                <button onclick="fn_verificar();" class="site-btn">Verificar Código</button>
+                                </div>
+                                
+                            </div>
+                            <!-- ./Código de Cliente -->
+
+
+
+                            <div id="id_form_pedido" style="display:none;">
+
+                                <h4 id="id_nombre_cliente"></h4>
+                                
+
+                                <table style="width:100%">
+                                    <form action="{% url 'cliente_pedido_add' %}" method="post" id="cliente_pedido_add">
+                                        {{ form.non_field_errors }} {% csrf_token %} {% for field in pedido_cliente_form.visible_fields %}
+                                        <tr>
+                                                
+                                            <td>                                                    
+                                                <strong>{{field.label}}</strong>
+                                                {{ field|add_class:"form-control form-control-sm" }} {{ field.errors }} 
+                                            </td>
+                                            
+                                        </tr>
+                                        {% endfor %} {% for field in pedido_cliente_form.hidden_fields %}
+                                        <div style="display:none;">{{ field }}</div>
+                                        {% endfor %}
+                                        
+                                        <tr>
+                                            <td>
+                                                <input type="submit" value="Enviar Pedido" class="btn btn-primary">
+                                            </td>
+                                        </tr>
+                                    </form>
+                                </table>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+
+{% endblock content %}
+
+{% block javascripts %} 
+{{ block.super }}
+
+<script src="{% static 'my_js/validators.js' %}"></script>
+
+<!-- alertifyjs -->
+<script src="{% static 'plugins/alertifyjs/alertify.min.js' %}"></script>
+
+<script>
+
+    const lv_url_key = "{% url 'clientes_filter_key_api' %}";
+    const lv_url_negocios = "{% url 'negocio_cliente_list_api' %}";
+
+    $("#id_negocio").empty(); // Limpiar lista
+    $("#id_negocio").append('<option value="" selected disabled> ---- </option>');
+
+</script>
+
+
+{% endblock javascripts %}

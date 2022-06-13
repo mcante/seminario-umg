@@ -1,0 +1,137 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static l10n %} 
+{% block title %} Financiero {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<!-- datepicker 1.9.0 -->
+<link href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+
+
+Estado Financiero Actual
+
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+<div class="row">
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Detalle</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <a href="{% url 'presupuesto_list' %}" class="btn btn-info"><i class="fas fa-coins"></i> Ver Presupuesto</a>
+                
+                <a href="{% url 'ventas_filter_list' %}" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Ver Ventas</a>
+                
+                <a href="{% url 'gastos_filter_list' %}" class="btn btn-secondary"><i class="fas fa-shopping-basket"></i> Ver Gatos</a>
+                <br><br>
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+                    
+                    <table class="table" style="width:100%">
+                        <thead>
+                            <th>Tipo</th>
+                            <th>Debe</th>
+                            <th>Haber</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Excedente</td>
+                                <td>Q{{ObjPresupuesto.excedente|unlocalize|default:"--"}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Presupuesto Anual</td>
+                                <td>Q{{ObjPresupuesto.presupuesto_anual|unlocalize|default:"--"}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Ventas</td>
+                                <td>Q{{ObjVentas|unlocalize|default:"--"}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Gastos</td>
+                                <td></td>
+                                <td>Q{{ObjGastos|unlocalize|default:"--"}}</td>
+                            </tr>
+                            <tr>
+                                <td>TOTALES</td>
+                                <td>Q{{ObjIngresos|unlocalize|default:"--"}}</td>
+                                <td>Q{{ObjGastos|unlocalize|default:"--"}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr style="background-color: red;">
+                    <h3>Balance General Q{{ ObjBalanceGeneral|unlocalize|default:"--" }}</h3>
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+    
+</div>
+<!-- /.row -->
+
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+<!-- datepicker 1.9.0 -->
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" charset="UTF-8"></script> 
+<!-- Paquete de traduccion a español -->
+<script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}" charset="UTF-8"></script> 
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+<script>
+    //init_select2();
+    init_select2_bootstrap_4();
+    init_datapicker();
+</script>
+
+{% endblock javascripts %}

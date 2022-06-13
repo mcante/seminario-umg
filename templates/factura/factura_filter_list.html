@@ -1,0 +1,300 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static %} 
+{% block title %} Factura {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<!-- DataTables 1.11.4 -->
+<link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+
+<!-- datepicker 1.9.0 -->
+<link href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+Buscador de Facturas
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+
+<!-- row -->
+<div class="row">
+    <!-- BOTONES DE PAGINADO -->
+    <div class="col-md-4">
+      <table>
+        <tr>
+          <td><button id="boton-consultar-primero" class="btn btn-block bg-gradient-primary btn-sm"><i class="fas fa-fast-backward"></i> Primero</button></td>
+          <td><button id="boton-consultar-anterior" class="btn btn-block bg-gradient-primary btn-sm"><i class="fas fa-step-backward"></i> Anterior</button></td>
+          <td><button id="boton-consultar-siguiente" class="btn btn-block bg-gradient-primary btn-sm"><i class="fas fa-step-forward"></i> Siguiente</button></td>
+          <td><button id="boton-consultar-ultimo" class="btn btn-block bg-gradient-primary btn-sm"><i class="fas fa-fast-forward"></i> Último</button></td>
+        </tr>
+      </table>
+    </div>
+    <!-- ./BOTONES DE PAGINADO REST -->
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-3">
+        <!-- INICIA EL card-body -->
+        <div class="box-body">
+          <div class="callout callout-info">
+            <!-- INICIA EL FORMULARIO -->
+            <div class="box-body table-responsive">
+              
+              <h3><p id="TotalRegistros">Criterios de búsqueda</p></h3>
+              <table class="stripe row-border order-column table-hover table-striped table-bordered" style="width:100%">
+                <form action="" method="GET">
+                  {% csrf_token %}
+                    {{form.as_table}}
+                    <td>
+                      <button id="boton-consultar" class="btn btn-round btn-info form-control btn-sm">Buscar</button>
+                    </td>
+                  </tr>
+                </form>
+              </table>
+
+              <a class="btn btn-warning btn-sm" href="{% url 'planta_factura_add' %}" target="_blank"><i class="fas fa-plus"></i> Crear Factura</a>
+            </div>
+            <!-- /.FINALIZA EL FORMULARIO -->
+          </div>
+        </div>
+        <!-- /.FINALIZA EL card-body -->
+      </div>
+
+      <div class="col-md-9">
+        
+        <!-- stripe row-border order-column table table-striped table-hover table-sm table-bordered table-condensed -->
+        <!-- stripe row-border order-column table-hover table-striped table-bordered -->
+        <div id="collapse1" class="table-responsive">
+          <table id="dataTablesFull" class="table table-sm table-striped table-hover table-bordered" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Número Factura</th>
+                      <th>Cliente</th>
+                      <th>Fecha Factura</th>
+                      <th>Monto Facturado</th>
+                      <th>Vendedor</th>
+                      <th>Estado Factura</th>
+                      <th>Estado Venta</th>
+                      <th>Completada</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  
+              </tbody>
+              
+          </table>
+      </div>
+
+    </div>
+</div>
+<!-- /.row -->
+
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+
+<!-- DataTables 1.11.4 -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+  
+<!-- Cargar botones -->
+<script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.html5.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'plugins/datatables-buttons/js/jszip.min.js' %}"></script> <!-- Requerido para que el botón de Export Excel funcione en el datable -->
+
+<!-- datepicker 1.9.0 -->
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" charset="UTF-8"></script> 
+<!-- Paquete de traduccion a español -->
+<script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}" charset="UTF-8"></script> 
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+<script>
+    //init_select2();
+    init_select2_bootstrap_4();
+    init_datatables_full();
+    init_datapicker();
+
+    //$('.datepicker').datepicker();
+
+
+    $("#boton-consultar-primero").hide();
+    $("#boton-consultar-anterior").hide();
+    $("#boton-consultar-siguiente").hide();
+    $("#boton-consultar-ultimo").hide();
+
+    document.getElementById("TotalRegistros").innerHTML = "Criterios de búsqueda";
+
+    
+
+    let linkPrimero = "{% url 'factura_filter_list_api' %}";
+    let linkAnterior = "";
+    let linkSiguiente = "";
+    let linkUltimo = "";
+
+
+  // LLAMAR A CONSULTA AJAX con el primer filtro
+  $('#boton-consultar').click(function(){
+    ConsultarClientes("{% url 'factura_filter_list_api' %}");  
+    return false;
+  });
+  
+  // Botón anterior de la búsqueda pagina del API
+  $('#boton-consultar-anterior').click(function(){
+    ConsultarClientes(linkAnterior);  
+    return false;
+  });
+
+  // Botón siguiente de la búsqueda pagina del API
+  $('#boton-consultar-siguiente').click(function(){
+    ConsultarClientes(linkSiguiente);  
+    return false;
+  });
+
+  // Botón primero paginado del API
+  $('#boton-consultar-primero').click(function(){
+    ConsultarClientes(linkPrimero);  
+    return false;
+  });
+
+  // Botón último paginado del API
+  $('#boton-consultar-ultimo').click(function(){
+    ConsultarClientes(linkUltimo);  
+    return false;
+  });
+
+
+
+
+  function ConsultarClientes(p_Link){
+    var datos = {}; // Array que se enviará por Ajax
+    var table = $("#dataTablesFull").DataTable(); // Instancia del la tabla
+    table.clear(); // Limpiar la tabla
+    table.draw(); // Redibujar la tabla base
+
+    datos.numero_factura = $("#id_numero_factura").val();
+    datos.cliente = $("#id_cliente").val();
+    datos.fecha_factura_min = $("#id_fecha_factura_min").val();
+    datos.fecha_factura_max = $("#id_fecha_factura_max").val();
+    datos.vendedor = $("#id_vendedor").val();
+    datos.estado_factura = $("#id_estado_factura").val();
+    datos.estado_venta = $("#id_estado_venta").val();
+
+    datos.negocio = "{{ user.relPerfilUsuario.negocio.id|default:'0' }}";
+
+    // Validar Si está marcado el check de estado activo o inactivo del usuario APP
+    var isChecked = document.getElementById('id_completada').checked;
+    if(isChecked){
+        datos.completada = 1;
+    }else{
+        datos.completada = 0;
+    }
+
+    console.log(datos);
+
+    LinkDinamico = p_Link;
+
+    $.ajax({
+        data: datos,
+        url: LinkDinamico,
+        type: 'GET',
+        dataType:'json',
+
+        success: function(result){
+
+        //console.log(result.results.length);
+        //console.log(result.next);
+        
+        // Si es nulo ocultar el botón sino mostrarlo y cargar el link para el paginado anterior
+        if (result.anterior == null){
+            $("#boton-consultar-anterior").hide();
+        }else{
+            $("#boton-consultar-anterior").show();
+            linkAnterior = result.anterior;
+        }
+
+        // Si es nulo ocultar el botón sino mostrarlo y cargar el link para el paginado siguiente
+        if (result.siguiente == null){
+            $("#boton-consultar-siguiente").hide();
+        }else{
+            $("#boton-consultar-siguiente").show();
+            linkSiguiente = result.siguiente;
+        }
+
+        // Si hay más de un paginado entonces mostrar los botones de primer y último páginado
+        if(result.total_pages > 1){
+            $("#boton-consultar-primero").show();
+            $("#boton-consultar-ultimo").show();
+            
+            linkUltimo = linkPrimero+"?page="+result.total_pages;
+        }
+
+        document.getElementById("TotalRegistros").innerHTML = "Encontrados: " + result.count;
+
+        
+        
+            for (  i = 0 ; i < result.results.length; i++){
+
+                let lv_completado = ""
+                
+                if(result.results[i].completada){
+                  lv_completado = "Sí"
+                }else{
+                  lv_completado = "No"
+                }
+
+                // Construir la url para update pasando como parámetro 777 y luego reemplazarlo por el ID a actualizar
+                let lv_urlFacturaUpdate = "{% url 'planta_factura_update' 777 %}";
+                lv_urlFacturaUpdate = lv_urlFacturaUpdate.replace('777', result.results[i].id);
+
+                table.row.add( [
+                    "<a target='_blank' class='btn btn-round btn-warning btn-xs' href='"+ lv_urlFacturaUpdate +"'><i class='icon-sign-blank'></i> "+ result.results[i].numero_factura +"</a>",
+                    result.results[i].cliente,
+                    result.results[i].fecha_factura,
+                    result.results[i].monto_total,
+                    result.results[i].vendedor,
+                    result.results[i].estado_factura,
+                    result.results[i].estado_venta,
+                    lv_completado
+                ] ).draw( false );
+            }
+        },
+        error: function() {
+        table.clear();
+        }
+
+      });
+    }
+</script>
+
+{% endblock javascripts %}

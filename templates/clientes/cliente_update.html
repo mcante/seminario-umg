@@ -1,0 +1,263 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static %} 
+{% block title %} Cliente {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+
+
+
+{% if object.id %}
+    Actualizar Cliente 
+{% else %}
+    Agregar Cliente 
+{% endif %}
+
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+<div class="row">
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Formulario de Clientes</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+                    
+
+                    <table class="table table-striped table-hover table-sm">
+                                <form action="" method="post">
+                                    {{ form.non_field_errors }}
+                                    {% csrf_token %}
+                        
+                        {% for field in form.visible_fields %}
+                                    <tr>
+                                        <td>{{field.label}}</td>
+                                        <td>{{ field|add_class:"form-control form-control-sm" }} {{ field.errors }}</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                        
+                                    <tr>
+                                        <td>
+                                            <input type="submit" value="Guardar" class="btn btn-primary">
+                                        </td>
+                                    </tr>
+                                </form>
+                    </table>
+                    
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Negocios Asociados</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+                    
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-default"><i class="fas fa-plus-circle"></i> Agregar Negocio</button>
+                    <br><br>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">                            
+                            <thead>
+                                <tr>
+                                    <th>Negocio</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if negocio_cliente_list %}
+
+                                {% for obj in negocio_cliente_list %}
+                                <tr>
+                                    <td>{{obj.negocio.nombre_negocio}}</td>
+                                    <td>
+                                        <button id="id_negocio_delete" class="btn btn-sm btn-danger" onclick="f_quitar_negocio_delete('{{ obj.id}}')"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                                {% endif %}
+                                
+                            </tbody>
+                            <!--
+                            <tfoot>
+                                <th><input type="text" placeholder="Buscar"/></th>
+                            </tfoot>
+                            -->
+                        </table>
+                    </div>
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+    
+</div>
+<!-- /.row -->
+
+
+
+<!-- modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregar Negocio</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class = "table-responsive-sm">
+    
+                <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">
+                    <form action="{% url 'negocio_cliente_add' %}" method="post" id="negocio_cliente_add">
+                        {{ form.non_field_errors }} {% csrf_token %} {% for field in negocio_cliente_form.visible_fields %}
+                        <tr>
+                                
+                            <td>                                                    
+                                <strong>{{field.label}}</strong>
+                                {{ field|add_class:"form-control form-control-sm" }} {{ field.errors }} 
+                            </td>
+                            
+                        </tr>
+                        {% endfor %} {% for field in negocio_cliente_form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                        
+                        <tr>
+                            <td>
+                                <input type="submit" value="Asignar Negocio" class="btn btn-primary">
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+            </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+<script>
+    init_select2();
+    init_select2_bootstrap_4();
+</script>
+
+<script>
+    // Función para quitar un negocio de la lista a través de API Rest
+    const f_quitar_negocio_delete = async(p_id_negocio_delete) => {
+            
+            // Obtener la url
+            const p_url = '{% url "negocio_cliente_api" 9999 %}';
+            const p_nueva_url = p_url.replace("9999", p_id_negocio_delete);
+
+            console.log(p_nueva_url);
+
+            // Llamar al API por Fetch, pasando la url y el id a eliminar.
+            try {
+                
+                const Respuesta = await fetch(p_nueva_url, {
+                    method: 'DELETE',
+                    credentials: "same-origin",
+                    headers: {
+                    "Authorization":"9049d4b9a02c4852c7e42dbe457463be89962f8b", // Token generado en el admin
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                    },
+                })
+                const TextResul = await Respuesta.status;
+                //console.log(TextResul);
+                //return TextResul;
+                //.then (res => res.json())
+                //.then ( () => location.reload())
+                location.reload();
+            } catch (error) {
+                console.log("Error 'f_quitar_negocio_delete' " + error);
+            }
+
+            
+        }
+</script>
+
+{% endblock javascripts %}

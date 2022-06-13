@@ -1,0 +1,56 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+
+
+    {% block content %}
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'inicio_view' %}"><i class="fa fa-home"></i> Inicio</a>
+                        <span>Acerca de</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Contact Section Begin -->
+    <section class="contact spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="contact__content">
+                        <div class="contact__address">
+                            <h5>¿QUIENES SOMOS?</h5>
+
+                            <p>TransPort es una empresa que proporciona servicio de transporte terrestre en Guatemala y en Centroamérica dando también soluciones logísticas en todas su línea operativa, así como servicios de construcción y venta de materiales.</p>
+                            <p>Surge al ver la necesidad existente en el mercado de un servicio no solo de transporte si no de logística, que cumpla con ciertas necesidades que actualmente no son cubiertas como por ejemplo:</p>
+                            <ul>
+                                <li>Información constante con tracking de ruta en vivo.</li>
+                                <li>Turno de 24 horas de monitoreo de ruta y estado de operación.</li>
+                                <li>Cumplimiento en áreas de seguridad para equipo y personal.</li>
+                                <li>Planificando y creando arquitecturas logísticas para la programación de traslados para nuestros clientes según lo indica su operación.</li>
+                                <li>Adaptabilidad para poder operar de la forma con el cliente necesite.</li>
+                            </ul>
+                            <br>
+
+                            <p> <strong>Nuestra Visión</strong> </p>
+                            <p>Ser una empresa líder e innovadora en el servicio de transporte terrestre en todo Centroamérica, promoviendo la tecnología para ofrecer un servicio con trazabilidad y en tiempo.</p>
+
+                            <p> <strong>Nuestra Misión</strong> </p>
+                            <p>Ser una empresa que marca diferencia en sus operaciones de transporte, creando relaciones sostenibles con nuestros accionistas, colaboradores, socios comerciales generando desarrollo en los países que operamos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+
+{% endblock content %}

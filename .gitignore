@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Rope project settings
+*.sqlite3
+settings.py
+core/settings.py
+ProyectoSeminario/core/settings.py

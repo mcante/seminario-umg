@@ -1,0 +1,793 @@
+{% load static %}
+{% load auth_extras %}
+
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'dist/img/Avatar.png' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{ user.get_full_name }}</a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-compact nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          
+          <!-- MULTI MENÚ -->
+          <li class="nav-header">Menús</li>
+
+          
+          <li class="nav-item">
+            <a href="{% url 'principal_view' %}" class="nav-link">
+              <i class="fas fa-circle nav-icon"></i>
+              <p>Principal</p>
+            </a>
+          </li>
+
+          <!-- SÓLO SI TIENE NEGOCIO ASIGNADO PUEDE VER EL MENÚ COMPLETO -->
+          {% if user.relPerfilUsuario.negocio %}
+
+
+          {% if request.user|has_group:"Piloto"%}
+          <li class="nav-item">
+            <a href="{% url 'rutas_piloto_list' %}" class="nav-link">
+              <i class="fas fa-circle nav-icon"></i>
+              <p>Rutas del Piloto</p>
+            </a>
+          </li>
+          {% endif %}
+
+          <!-- Los pilotos no deben visualizar a los clientes ni proveedores -->
+          {% if not request.user|has_group:"Piloto"%}
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Mensajería
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'mensajeria_encabezado_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lista de Mensajes</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'mensajeria_encabezado_add' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Enviar Nuevo Hilo</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          
+          {% if request.user|has_group:"Contador" or request.user|has_group:"Operativo" %}
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Empleados
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'empleado_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lista de Empleados</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'encabezado_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Encabezados de Planilla</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          {% endif %}
+
+          {% if not request.user|has_group:"Administrativo"%}
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Clientes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'cliente_filter_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Buscar</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'cliente_add' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Crear</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'contacto_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Solicitudes contacto</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Proveedores
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'proveedor_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lista de Proveedores</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'proveedor_add' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Agregar Proveedor</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          {% endif %} <!-- menos los administrativos -->
+          {% endif %} <!-- menos el piloto -->
+
+          {% if request.user|has_group:"Operativo" or request.user|has_group:"Vendedor" or request.user|has_group:"Contador" %}
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Pedidos
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'pedido_general_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Lista de pedidos del negocio</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'pedido_user_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Mi lista de pedidos</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'pedido_add' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Crear</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          {% endif %}
+
+
+          {% if request.user|has_group:"Administrativo" or request.user|has_group:"Supervisor" or request.user|has_group:"Contador"|has_group:"Operativo" %}
+          <!-- ESTADO FINANCIERO -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Estado de Financiero
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item">
+                <a href="{% url 'estado_financiero_view' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Balance General</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'ventas_filter_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reporte de Ventas</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{% url 'gastos_filter_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Reporte de Gastos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'gastos_add' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Agregar Gasto</p>
+                </a>
+              </li>
+
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Presupuesto
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'presupuesto_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Presupuestos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'presupuesto_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Presupuesto</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+            </ul>
+          </li>
+          <!-- ./ESTADO FINANCIERO -->
+          {% endif %}
+
+          <!--
+            1-Planta de extracción minera
+            2-Planta de proceso de materia prima
+          -->
+          {% if user.relPerfilUsuario.negocio.giro_negocio.id == 1 or user.relPerfilUsuario.negocio.giro_negocio.id == 2 %}
+          <!-- PLANTAS -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                APP Planta
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              
+              {% if request.user|has_group:"Operativo" or request.user|has_group:"Contador" %}
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ingreso de Compras Inv.
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'plantas_ingreso_inventario_compras_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Compras Ingresadas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'plantas_ingreso_inventario_compras_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ingresar compra al inventario</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              {% endif %}
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Almacén
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'plantas_inventario_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ver Inventario</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'productos_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Productos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'producto_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Producto</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'medida_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Medidas</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Facturación
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'plantas_factura_filter_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ver Facturas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'planta_factura_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Factura</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Despachos
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'despacho_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de despachos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'despacho_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar despacho</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+          <!-- ./PLANTAS -->
+          {% endif %}
+
+          <!--
+            3-Venta y alquiler de maquinaria de construcción
+          -->
+          {% if user.relPerfilUsuario.negocio.giro_negocio.id == 3 %}
+          <!-- MAQUINAS -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                APP Ventas y Alquileres
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Máquinas
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'maquina_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de máquinas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'maquina_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Máquina</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventario de Ventas
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_ventas_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista Máquinas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_ventas_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ingresar Máquina al inventario</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ingreso de Compras Inv.
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'ingreso_inventario_compras_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Compras Ingresadas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'ingreso_inventario_compras_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ingresar compra al inventario</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Alquileres
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_alquiler_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Listar de Inventario</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_alquiler_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar al Inventario</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="{% url 'alquiler_maquina_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Máquinas Alquiladas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'alquiler_maquina_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ficha de Alquiler</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Despachos
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'despacho_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de despachos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'despacho_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar despacho</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Facturación
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'factura_maquinas_filter_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Buscar de facturas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'maquinas_factura_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Factura</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+          <!-- ./MAQUINAS -->
+          {% endif %}
+
+
+          <!--
+            4-Transportes
+          -->
+          <!-- Los pilotos no deben visualizar el menú del giro de negocio -->
+          {% if user.relPerfilUsuario.negocio.giro_negocio.id == 4 and not request.user|has_group:"Piloto" %}
+          <!-- TRANSPORTES -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                APP Transportes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Vehículos
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_vehiculo_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de vehículos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'inventario_vehiculo_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Vehículo</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Dispositivos GPS
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'dispositivogps_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Dispositivos GPS</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'dispositivo_gps_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Dispositivos GPS</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Rutas
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'rutas_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Rutas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'rutas_piloto_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Rutas Piloto</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Facturación
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'factura_transportes_filter_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de facturas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'transportes_factura_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Factura</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+          <!-- ./TRANSPORTES -->
+          {% endif %}
+
+
+          <!--
+            5-Planta de extracción minera
+          -->
+          {% if user.relPerfilUsuario.negocio.giro_negocio.id == 5 %}
+          <!-- PROYECTOS -->
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                APP Proyectos
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Proyecto
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'proyecto_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de Proyectos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'proyecto_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Proyecto</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Facturación
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'factura_proyectos_filter_list' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Lista de facturas</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'proyectos_factura_add' %}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Agregar Factura</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+          <!-- ./PROYECTOS -->
+          {% endif %}
+
+          {% endif %}
+
+
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>

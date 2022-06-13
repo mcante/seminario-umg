@@ -1,0 +1,1 @@
+default_app_config = 'ventas_y_alquileres.apps.Ventas_y_alquileresConfig'

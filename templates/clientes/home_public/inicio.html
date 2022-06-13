@@ -1,0 +1,115 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+
+
+    {% block content %}
+
+    <!-- Categories Section Begin -->
+    <section class="categories">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 p-0">
+                    <div class="categories__item categories__large__item set-bg" data-setbg="{% static 'home_public/img/categories/category-1.png' %}">
+                    <div class="categories__text">
+                        <h1>Servicios de Construcción</h1>
+                        <p style="color: white;">“Somos una empresa innovadora, especializada en el suministro de personal calificado, construcción y mantenimiento de infraestructura, compartiendo valores de Honestidad, Servicio y Excelencia, en beneficio de nuestros colaboradores y accionistas.”</p>
+                        <a href="{% url 'contacto_view' %}">Ver más</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="{% static 'home_public/img/categories/category-2.jpg' %}">
+                            <div class="categories__text">
+                                <h4>Servicios de Transporte</h4>
+                                <br><br><br><br><br>
+                                <p style="color: white;">Más de 50 unidades para todo tipo de cargamento nacional o internacional.</p>
+                                <a href="{% url 'transportes_list' %}">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="{% static 'home_public/img/categories/category-3.jpg' %}">
+                            <div class="categories__text">
+                                <h4>Venta y Alquiler <br> de Maquinaría de Construcción</h4>
+                                <p style="color: white;">Todo tipo de maquinaria</p>
+                                <a href="{% url 'maquinaria_list' %}">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="{% static 'home_public/img/categories/category-4.jpg' %}">
+                            <div class="categories__text">
+                                <h4>Plantas Mineras</h4>
+                                <p style="color: white;">Extraemos materia prima de construcción.</p>
+                                <a href="{% url 'minera_list' %}">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                        <div class="categories__item set-bg" data-setbg="{% static 'home_public/img/categories/category-5.jpg' %}">
+                            <div class="categories__text">
+                                <h4>Venta de Material de Construcción</h4>
+                                <p style="color: white;">Contamos con tipo tipo de materiales para construcción.</p>
+                                <a href="{% url 'transformaciones_list' %}">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Categories Section End -->
+
+<hr>
+
+
+<!-- Services Section Begin -->
+<section class="services spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-truck"></i>
+                    <h6>Transportes</h6>
+                    <p>Nacionales e Internacionales</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-building"></i>
+                    <h6>Servicios de Construcción</h6>
+                    <p>Puentes, Edificios, Carreteras, etc.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-cog"></i>
+                    <h6>Venta y Alquiler de Maquinaria</h6>
+                    <p>Equipo Pesado de Construcción.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-diamond"></i>
+                    <h6>Planta Minera</h6>
+                    <p>Venta de material minero.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-cubes"></i>
+                    <h6>Planta de Transformaciones</h6>
+                    <p>Venta de material de construcción.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Services Section End -->
+
+<hr>
+
+{% endblock content %}

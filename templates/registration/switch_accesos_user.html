@@ -1,0 +1,175 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static %} 
+{% block title %} Switch Negocio {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+    Cambiar de Negocio o Empresa
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+<div class="row">
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Seleccione una Empresa</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+
+                    <h3>
+                        <span class="badge badge-info">{{ user.relPerfilUsuario.negocio.nombre_negocio|default:"" }}</span>
+                    </h3>
+                    
+                    <p class="sub-header">
+                        Para cambiar de Negocio, debe de hacer clic sobre el mismo, sólo debe de haber uno como Actual. <br>
+                        Sólo podrá ver los Negocios en los que haya sido asignado.
+                    </p>
+
+
+                    <!-- INICIA EL FORMULARIO -->
+                <div class="box-body">
+
+                    <div id="collapse1" class="table-responsive">
+                        <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">                            
+                            <thead>
+                                <tr>
+                                    <th>Negocio o Empresa</th>
+                                    <th>Actual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if object_list_access %}
+
+                                {% for obj in object_list_access %}
+                                <tr>
+                                    <td>
+                                        <button id="id_negocio_delete" class="btn btn-sm btn-danger" onclick="f_set_acceso('{{obj.id}}');">Seleccionar <i class="fas fa-hand-pointer"></i> <strong> {{ obj.negocio.nombre_negocio }}</strong></button>
+                                    </td>
+                                    <td>
+                                        {% if obj.preferido %}
+                                            <span class="badge bg-success rounded-pill">Sí </span>
+                                        {% else %}
+                                            <span class="badge bg-danger rounded-pill">No</span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+
+                                {% endif %}
+                                
+                            </tbody>
+                            <!--
+                            <tfoot>
+                                <th><input type="text" placeholder="Buscar"/></th>
+                            </tfoot>
+                            -->
+                        </table>
+                    </div>
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+                    
+
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+    
+</div>
+<!-- /.row -->
+
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+
+<script>
+
+    //multiselect
+
+    // función para actualizar el Negocio pedeterminado.
+    const f_set_acceso = async(p_id) =>{
+        
+        // Construir la url para update pasando como parámetro 777 y luego reemplazarlo por el ID a actualizar
+        let lv_url = "{% url 'accesos_user_update_api' 777 %}";
+        lv_url = lv_url.replace('777', p_id);
+
+        //console.log(lv_url);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Accept", "application/json");
+
+        var raw = JSON.stringify({
+        "preferido": true
+        });
+
+        const Respuesta = await fetch(lv_url, {
+            method: 'PUT',
+            credentials: "same-origin",
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        })
+        const TextResul = await Respuesta.status;
+        console.log(TextResul);
+
+        if(TextResul == 200){
+            location.reload();
+        }
+
+        
+    }
+
+
+</script>
+
+{% endblock javascripts %}

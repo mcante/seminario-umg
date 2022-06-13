@@ -1,0 +1,105 @@
+{% extends "clientes/home_public/base_publico.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- Product Section Begin -->
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <div class="section-title">
+                    <h4>Planta Transformaciones</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row property__gallery">
+
+            {% if object_list %}
+            {% for objeto in object_list %}
+
+            <div class="col-lg-3 col-md-4 col-sm-6 mix women">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="{% if objeto.producto.imagen_producto %}{{objeto.producto.imagen_producto.url}}{% endif %}">
+                        <div class="label new">New</div>
+                        <ul class="product__hover">
+                            <li><a href="{% if objeto.producto.imagen_producto %}{{objeto.producto.imagen_producto.url}}{% endif %}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                            <li><a href="{% url 'pedidos_view' %}"><span class="icon_bag_alt"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="#">{{ objeto.producto.nombre }}</a></h6>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <div class="product__price">Q {{ objeto.precio }}</div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            {% else %}
+            <h1>No hay productos para mostrar</h1>
+            {% endif %}	
+
+        </div>
+    </div>
+</section>
+<!-- Product Section End -->
+
+<hr>
+
+
+<!-- Services Section Begin -->
+<section class="services spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-truck"></i>
+                    <h6>Transportes</h6>
+                    <p>Nacionales e Internacionales</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-building"></i>
+                    <h6>Servicios de Construcción</h6>
+                    <p>Puentes, Edificios, Carreteras, etc.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-cog"></i>
+                    <h6>Venta y Alquiler de Maquinaria</h6>
+                    <p>Equipo Pesado de Construcción.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-diamond"></i>
+                    <h6>Planta Minera</h6>
+                    <p>Venta de material minero.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="services__item">
+                    <i class="fa fa-cubes"></i>
+                    <h6>Planta de Transformaciones</h6>
+                    <p>Venta de material de construcción.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Services Section End -->
+
+<hr>
+
+{% endblock content %}

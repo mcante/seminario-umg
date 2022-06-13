@@ -1,0 +1,359 @@
+{% extends "base/principal.html" %} 
+{% load widget_tweaks %}
+
+{% load static %} 
+{% block title %} Factura {% endblock title %} 
+
+{% block stylesheets %} 
+{{ block.super }}
+
+<!-- alertifyjs -->
+<link href="{% static 'plugins/alertifyjs/css/alertify.min.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'plugins/alertifyjs/css/themes/bootstrap.min.css' %}"/>
+
+<!-- Select2   4.0.13 -->
+<link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<!-- datepicker 1.9.0 -->
+<link href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}" rel="stylesheet" type="text/css" />
+
+
+{% endblock stylesheets %} 
+
+
+{% block headercontent %} 
+
+
+
+{% if object.id %}
+    Actualizar Factura # {{ object.numero_factura }}
+{% else %}
+    Agregar Factura
+{% endif %}
+
+{% endblock headercontent %} 
+
+
+{% block content %}
+
+<!-- =========================================================== -->
+
+<div class="row">
+
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Formulario de Factura / Planta</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <a href="{% url 'imprimir_factura_transportes_view' object.id %}" target="_black"><i class='fas fa-print fa-4x' style='color:#1930a4'></i> <br> Imprimir</a>
+
+                {% if object.completada %}
+                <table class="table table-striped table-hover table-sm">
+                    <tr>
+                        <td>Cliente:</td>
+                        <td>{{ object.cliente.nombre_empresa }}</td>
+                    </tr>
+                    <tr>
+                        <td>Pedido:</td>
+                        <td>{{ object.pedido.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Fecha Facturación:</td>
+                        <td>{{ object.fecha_factura }}</td>
+                    </tr>
+                    <tr>
+                        <td>Monto Total:</td>
+                        <td>Q{{ object.monto_total }}</td>
+                    </tr>
+                    <tr>
+                        <td>Vendedor:</td>
+                        <td>{{ object.vendedor.get_full_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Estado Factura:</td>
+                        <td>{{ object.estado_factura }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tipo Pago:</td>
+                        <td>{{ object.tipo_pago }}</td>
+                    </tr>
+                    <tr>
+                        <td>Estado de la Venta:</td>
+                        <td>
+                            {% if object.completada %}
+                                <small class="badge badge-success"> {{ object.estado_venta }}</small>
+                            {% else %}
+                                <small class="badge badge-warning"> {{ object.estado_venta }}</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                {% else %}
+
+
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="box-body  table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                                <form action="" method="post">
+                                    {{ form.non_field_errors }}
+                                    {% csrf_token %}
+                        
+                        {% for field in form.visible_fields %}
+                                    <tr>
+                                        <td>{{field.label}}</td>
+                                        <td>{{ field|add_class:"form-control form-control-sm" }} {{ field.errors }}</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% for field in form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                        
+                                    <tr>
+                                        <td>
+                                            <input type="submit" value="Guardar" class="btn btn-primary">
+                                        </td>
+                                    </tr>
+                                </form>
+                    </table>
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+
+
+                {% endif %}
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+
+    <!-- /.col -->
+    <div class="col-md-5 col-sm-8 col-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Ruta a facturar</h3>
+    
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                {% if object.completada %}
+                    <span class="badge badge-success">Factura completada, no se permiten modificaciones</span>
+                {% else %}
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-default"><i class="fas fa-plus-circle"></i> Agregar Producto al Detalle</button>
+                    <br><br>
+                {% endif %}
+
+
+                <!-- INICIA EL FORMULARIO -->
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">                            
+                        <thead>
+                            <tr>
+                                <th>Ruta</th>
+                                <th>Fecha Creación</th>
+                                <th>SubTotal</th>
+                                <th>Ruta Nacional</th>
+                                <th>Ruta Completada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if detalle_factura_list %}
+
+                            {% for obj in detalle_factura_list %}
+                            <tr>
+                                <td>
+                                    <a class="btn-xs btn-warning" href="{% url 'ruta_update' obj.id %}">{{obj.vehiculo}} / {{obj.piloto}}</a>
+                                </td>
+                                <td>{{obj.creado}}</td>
+                                <td>Q{{obj.fn_calcular_monto_facturar}}</td>
+                                <td>
+                                    {% if obj.es_nacional %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if obj.completada %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            {% endif %}
+                            
+                        </tbody>
+                        <!--
+                        <tfoot>
+                            <th><input type="text" placeholder="Buscar"/></th>
+                        </tfoot>
+                        -->
+                    </table>
+                </div>
+                <!-- /.FINALIZA EL FORMULARIO -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+    
+</div>
+<!-- /.row -->
+
+
+
+
+<!-- modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Asociar Ruta</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+            <div class = "table-responsive-sm">
+    
+                <table class="table table-sm table-hover table-striped table-bordered" style="width:100%">
+                    <form action="{% url 'ruta_add' %}" method="post" id="ruta_add">
+                        {{ form.non_field_errors }} {% csrf_token %} {% for field in detalle_factura_form.visible_fields %}
+                        <tr>
+                                
+                            <td>                                                    
+                                <strong>{{field.label}}</strong>
+                                {{ field|add_class:"form-control form-control-sm" }} {{ field.errors }} 
+                            </td>
+                            
+                        </tr>
+                        {% endfor %} {% for field in detalle_factura_form.hidden_fields %}
+                        <div style="display:none;">{{ field }}</div>
+                        {% endfor %}
+                        
+                        <tr>
+                            <td>
+                                <input type="submit" value="Guardar Detalle" class="btn btn-primary">
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+            </div>
+
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+
+{% endblock content %} 
+
+{% block javascripts %} 
+{{ block.super }}
+
+
+<!-- jQuery v3.5.1 -->
+<script src="{% static 'plugins/jquery/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Select2  4.0.13 -->
+<script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+
+<!-- alertifyjs -->
+<script src="{% static 'plugins/alertifyjs/alertify.min.js' %}"></script>
+
+<!-- datepicker 1.9.0 -->
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}" charset="UTF-8"></script> 
+<!-- Paquete de traduccion a español -->
+<script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}" charset="UTF-8"></script> 
+
+
+<script src="{% static 'my_js/inicializar.js' %}"></script>
+
+<script>
+    //init_select2();
+    init_select2_bootstrap_4();
+    init_datapicker();
+</script>
+
+
+
+<script>
+
+    
+// Consumir el API Rest SERVICIO DELETE
+const fn_quitar_del_detalle = async(p_id) => {
+    
+    try {
+        lv_url_delete = "{% url 'factura_detalle_api' 777 %}";
+        lv_url_delete = lv_url_delete.replace('777', p_id);
+
+        const Respuesta = await fetch(lv_url_delete, {
+            method: 'DELETE',
+            credentials: "same-origin",
+            headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+            },
+        })
+        const TextResul = await Respuesta.status;
+        console.log(TextResul);
+
+        if(TextResul == 204){
+            location.reload();
+        }
+
+    } catch (error) {
+        console.log("Error 'fn_quitar_del_detalle' " + error);
+    }
+    
+}
+// ./Consumir el API Rest SERVICIO DELETE
+
+
+
+
+</script>
+
+
+
+{% endblock javascripts %}

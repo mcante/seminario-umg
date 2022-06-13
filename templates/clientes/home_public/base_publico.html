@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Sitio Web TransPort">
+    <meta name="keywords" content="TransPort, Transportes, Construcción, Venta, Alquiler, Minera">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{% static 'dist/img/favicon.ico' %}" rel="icon" type="image/x-icon" />
+    <title>TransPort</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'home_public/css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/jquery-ui.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/magnific-popup.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'home_public/css/style.css' %}" type="text/css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-lg-2">
+                    <div class="header__logo">
+                        <a href="{% url 'inicio_view' %}"><img src="{% static 'home_public/img/LogoRentangular.png' %}" alt="">TransPort</a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-7">
+
+                    {% url 'inicio_view' as inicio_view_url %}
+                    {% url 'acerca_de_view' as acerca_de_view_url %}
+                    {% url 'contacto_view' as contacto_view_url %}
+                    {% url 'pedidos_view' as pedidos_view_url %}
+                    {% url 'acceso_clientes_view' as acceso_clientes_view_url %}
+                                        
+
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="{% if inicio_view_url == request.path %}active{% endif %}"><a href="{% url 'inicio_view' %}">Inicio</a></li>
+                            <li class="{% if acerca_de_view_url in request.path %}active{% endif %}"><a href="{% url 'acerca_de_view' %}">Acerca de</a></li>
+                            <li class="{% if contacto_view_url in request.path %}active{% endif %}"><a href="{% url 'contacto_view' %}">Contáctanos</a></li>
+                            <li class="{% if pedidos_view_url in request.path %}active{% endif %}"><a href="{% url 'pedidos_view' %}">Pedidos</a></li>
+                            <li class="{% if acceso_clientes_view_url in request.path %}active{% endif %}"><a href="{% url 'acceso_clientes_view' %}">Clientes</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__right">
+                        <div class="header__right__auth">
+                            <a href="{% url 'login' %}">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    {% block content %}
+    <!-- {{ content }} -->
+    {% endblock content %}
+
+<hr>
+
+
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-7">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="{% url 'inicio_view' %}"><img src="{% static 'home_public/img/LogoRentangular.png' %}" alt="">TransPort</a>
+                    </div>
+                    <p>
+                        TransPort es una sinergia empresarial dedicada a la construcción y servicios de transporte
+                        <br><br>
+                        Aceptamos todo tipo de pago.
+                    .</p>
+                    <div class="footer__payment">
+                        <a href="#"><img src="{% static 'home_public/img/payment/payment-1.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'home_public/img/payment/payment-2.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'home_public/img/payment/payment-3.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'home_public/img/payment/payment-4.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'home_public/img/payment/payment-5.png' %}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-5">
+                <div class="footer__widget">
+                    <h6>Sitio</h6>
+                    <ul>
+                        <li><a href="{% url 'inicio_view' %}">Inicio</a></li>
+                        <li><a href="{% url 'acerca_de_view' %}">Acerca de</a></li>
+                        <li><a href="{% url 'contacto_view' %}">Contactanos</a></li>
+                        <li><a href="{% url 'pedidos_view' %}">Pedidos</a></li>
+                        <li><a href="{% url 'acceso_clientes_view' %}">Clientes</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                <div class="footer__copyright__text">
+                    <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved | TransPort S.A. <i class="fa fa-users" aria-hidden="true"></i> by <a href="#" target="_blank">Melvin Canté</a></p>
+                </div>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+
+
+{% block javascripts %}
+<!-- Js Plugins -->
+<script src="{% static 'home_public/js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'home_public/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'home_public/js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'home_public/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'home_public/js/mixitup.min.js' %}"></script>
+<script src="{% static 'home_public/js/jquery.countdown.min.js' %}"></script>
+<script src="{% static 'home_public/js/jquery.slicknav.js' %}"></script>
+<script src="{% static 'home_public/js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'home_public/js/jquery.nicescroll.min.js' %}"></script>
+<script src="{% static 'home_public/js/main.js' %}"></script>
+
+{% endblock javascripts %}
+
+</body>
+</html>
